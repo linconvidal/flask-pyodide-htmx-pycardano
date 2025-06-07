@@ -76,3 +76,14 @@ uv run python -m http.server
 ```
 
 Then open your browser to `http://localhost:8000`.
+
+## GitHub Pages Deployment
+
+The repository contains a GitHub Actions workflow that automatically builds the site and publishes it to **GitHub Pages** whenever changes are pushed to `main`.
+
+1. Tailwind CSS is compiled with `npm run build`.
+2. The required files are packaged into the `dist/` directory.
+3. The contents of `dist/` are uploaded as a Pages artifact and deployed.
+
+You can trigger the workflow manually from the Actions tab or by pushing new commits. Once completed, your site will be available at the Pages URL configured in the repository settings.
+
