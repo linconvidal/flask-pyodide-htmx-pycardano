@@ -104,7 +104,7 @@ logs
 *.temp
 
 # Build outputs (comment out if you want to commit the built CSS)
-# static/style.css
+static/style.css
 
 # Test outputs
 test-report.html

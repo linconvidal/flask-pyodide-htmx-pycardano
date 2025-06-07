@@ -33,6 +33,30 @@ def some_route():
             <span class="font-medium text-purple-900">Generated At:</span>
             <span class="text-sm font-mono text-purple-600">{timestamp}</span>
         </div>
+        
+        <details class="mt-4 group">
+            <summary class="cursor-pointer flex items-center gap-2 text-sm font-medium text-zinc-700 hover:text-zinc-900 p-3 bg-zinc-100 hover:bg-zinc-50 rounded-t-lg border border-zinc-300 transition-colors duration-150 select-none hover:shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="details-icon transition-transform duration-300 ease-in-out group-open:rotate-90">
+                    <path d="M6.375 7.125V4.658h1.78c.973 0 1.542.457 1.542 1.237 0 .802-.604 1.23-1.764 1.23H6.375zm0 3.762h1.898c1.184 0 1.81-.48 1.81-1.377 0-.885-.65-1.348-1.886-1.348H6.375v2.725z"/>
+                    <path d="M4.002 0a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V4a4 4 0 0 0-4-4h-8zm0 1h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3z"/>
+                </svg>
+                <span>View Source Code</span>
+            </summary>
+            <div class="bg-[#282c34] rounded-b-lg border-x border-b border-zinc-300 overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-2 bg-[#21252b] text-xs text-zinc-400 border-b border-zinc-700">
+                    <span>Python</span>
+                    <span class="text-zinc-500">Flask Route</span>
+                </div>
+                <pre class="text-xs p-4 overflow-x-auto"><code class="language-python group-open:animate-fade-in-fast">@app.route('/some_route')
+def some_route():
+    # Generate random dynamic data
+    random_number = random.randint(1, 1000)
+    random_float = round(random.uniform(0, 100), 2)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    return f"..."  # HTML template with data</code></pre>
+            </div>
+        </details>
     </div>
     """
 
@@ -103,6 +127,38 @@ def pycardano_route():
                 <strong>Never use these keys for real transactions!</strong>
             </p>
         </div>
+        
+        <details class="mt-4 group">
+            <summary class="cursor-pointer flex items-center gap-2 text-sm font-medium text-zinc-700 hover:text-zinc-900 p-3 bg-zinc-100 hover:bg-zinc-50 rounded-t-lg border border-zinc-300 transition-colors duration-150 select-none hover:shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="details-icon transition-transform duration-300 ease-in-out group-open:rotate-90">
+                    <path d="M6.375 7.125V4.658h1.78c.973 0 1.542.457 1.542 1.237 0 .802-.604 1.23-1.764 1.23H6.375zm0 3.762h1.898c1.184 0 1.81-.48 1.81-1.377 0-.885-.65-1.348-1.886-1.348H6.375v2.725z"/>
+                    <path d="M4.002 0a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V4a4 4 0 0 0-4-4h-8zm0 1h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3z"/>
+                </svg>
+                <span>View Source Code</span>
+            </summary>
+            <div class="bg-[#282c34] rounded-b-lg border-x border-b border-zinc-300 overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-2 bg-[#21252b] text-xs text-zinc-400 border-b border-zinc-700">
+                    <span>Python</span>
+                    <span class="text-zinc-500">PyCardano Route</span>
+                </div>
+                <pre class="text-xs p-4 overflow-x-auto"><code class="language-python group-open:animate-fade-in-fast">@app.route('/pycardano')
+def pycardano_route():
+    # Generate a new key pair
+    payment_key_pair = PaymentKeyPair.generate()
+
+    # Get the address for both mainnet and testnet
+    testnet_address = Address(payment_key_pair.verification_key.hash(), 
+                             network=Network.TESTNET)
+    mainnet_address = Address(payment_key_pair.verification_key.hash(), 
+                             network=Network.MAINNET)
+    
+    # Get key information
+    verification_key_hex = payment_key_pair.verification_key.payload.hex()
+    verification_key_hash = payment_key_pair.verification_key.hash().payload.hex()
+    
+    return f"..."  # HTML template with blockchain data</code></pre>
+            </div>
+        </details>
     </div>
     """
 

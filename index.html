@@ -8,65 +8,8 @@
     <link href="./static/style.css" rel="stylesheet">
     <script src="./static/vendor/htmx/htmx.min.js"></script>
     <script src="./static/vendor/hyperscript/_hyperscript.min.js"></script>
-    <style>
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* HTMX applies this class to freshly swapped content */
-        .htmx-added {
-            opacity: 0;
-            animation: fade-in 0.5s ease-out forwards;
-        }
-
-        /* Keep content area from collapsing during HTMX request */
-        .content-container {
-            position: relative;
-            /* A subtle transition for when the new content has a different height */
-            transition: height 0.2s ease-out;
-        }
-
-        .content-container::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-color: rgba(249, 250, 251, 0.85);
-            /* bg-zinc-50 with opacity */
-            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='%2371717a' d='M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50'%3e%3canimateTransform attributeName='transform' attributeType='XML' type='rotate' dur='1s' from='0 50 50' to='360 50 50' repeatCount='indefinite' /%3e%3c/path%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 3rem;
-            /* 48px */
-            z-index: 10;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 200ms ease-in-out, visibility 200ms;
-            backdrop-filter: blur(1.5px);
-            border-radius: 0.75rem;
-            /* Matches the container's rounded-lg */
-        }
-
-        /* When HTMX is fetching content, show the overlay */
-        .content-container.htmx-request::after {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Hide the old content during the request */
-        .content-container.htmx-request>* {
-            opacity: 0 !important;
-            /* Use !important to override any other opacity styles */
-            transition: opacity 150ms ease-in-out;
-        }
-    </style>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
 
 <body class="bg-zinc-50 text-zinc-900 min-h-screen font-sans antialiased">
@@ -286,6 +229,19 @@ response_status = response.status_code
             }
         }
         main();
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function (evt) {
+            var target = evt.detail.target;
+            if (target.querySelectorAll) {
+                var allCodeBlocks = target.querySelectorAll('pre code');
+                allCodeBlocks.forEach(function (block) {
+                    hljs.highlightElement(block);
+                });
+            }
+        });
     </script>
 </body>
 
