@@ -1,13 +1,21 @@
 # Flask + Pyodide + HTMX + PyCardano
 
-A demonstration of running a Python Flask app entirely in the browser using WebAssembly (Pyodide) with HTMX for frontend interactions and PyCardano for Cardano blockchain functionality.
+This project runs a Python Flask app entirely in the browser using Pyodide, with HTMX for UI and PyCardano for Cardano blockchain features.
 
-## How It Works
+## Core Concepts
 
-- **Python in the Browser**: Uses Pyodide to run Python and Flask directly in the browser
-- **Service Worker**: Intercepts HTMX requests and redirects them to the in-browser Flask app
-- **HTMX**: Handles UI updates without writing custom JavaScript
-- **PyCardano**: Provides Cardano blockchain functionality (address generation)
+- **In-Browser Python**: Pyodide (Python compiled to WebAssembly) runs Flask directly in the browser.
+- **Service Worker for Routing**: A Service Worker intercepts HTMX `fetch` requests and redirects them to the in-browser Flask application. This allows HTMX to work without a traditional server backend.
+- **Static Hosting**: The entire application can be served as static files. No server-side execution is needed.
+- **Client-Side PyCardano**: Cardano address generation happens in the browser.
+
+## Project Structure
+
+- `index.html`: Main entry point. Loads Pyodide and the Python application.
+- `main.py`: The Flask application logic.
+- `sw.js`: Service Worker that routes `fetch` requests to the Flask app.
+- `static/`: Compiled CSS and other static assets.
+- `requirements.txt`: Python dependencies installed by Pyodide.
 
 ## Setup
 
@@ -47,7 +55,7 @@ Run tests:
 pytest tests/ -v
 ```
 
-Generate HTML report:
+Generate an HTML report:
 
 ```bash
 pytest tests/ --html=test-report.html --self-contained-html
@@ -55,7 +63,7 @@ pytest tests/ --html=test-report.html --self-contained-html
 
 ## Running the App
 
-You must serve the files from a web server (Service Worker won't work with file:// URLs):
+Serve the files from a local web server. The Service Worker will not work with `file://` URLs.
 
 ```bash
 python -m http.server
@@ -68,20 +76,3 @@ uv run python -m http.server
 ```
 
 Then open your browser to `http://localhost:8000`.
-
-## Project Structure
-
-- `index.html` - Main entry point with Pyodide initialization
-- `main.py` - Flask application code
-- `sw.js` - Service Worker that routes requests to the Flask app
-- `static/` - CSS and other static assets
-- `requirements.txt` - Python dependencies
-
-## Why This Exists
-
-This project demonstrates how to create a completely client-side web application using Python technologies that would normally require a server. Benefits include:
-
-- Zero backend infrastructure required
-- Can be hosted on any static file hosting
-- User data stays in the browser
-- Familiar Flask development experience
