@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask + Pyodide + HTMX</title>
+    <link href="./static/style.css" rel="stylesheet">
+    <script src="./static/vendor/htmx/htmx.min.js"></script>
+    <script src="./static/vendor/hyperscript/_hyperscript.min.js"></script>
+</head>
+
+<body class="bg-zinc-50 text-zinc-900 min-h-screen font-sans antialiased">
+    <div id="loading-overlay" class="fixed inset-0 bg-zinc-50 z-50 flex flex-col items-center justify-center">
+        <div class="flex items-center justify-center space-x-2 w-24 h-24 mb-4" aria-label="Loading content...">
+            <div class="w-6 h-6 bg-blue-600 rounded-full animate-bounce"
+                style="animation-delay: -0.3s; animation-duration: 1s;"></div>
+            <div class="w-6 h-6 bg-indigo-600 rounded-full animate-bounce"
+                style="animation-delay: -0.15s; animation-duration: 1s;"></div>
+            <div class="w-6 h-6 bg-blue-600 rounded-full animate-bounce" style="animation-duration: 1s;"></div>
+        </div>
+        <h2 class="text-2xl font-semibold text-zinc-800 mb-2">Initializing Application</h2>
+        <p id="loading-status" class="text-zinc-600">Please wait, this may take a moment...</p>
+    </div>
+
+    <div class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <header class="mb-16 text-center">
+            <h1
+                class="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-4">
+                Decentralized Flask App</h1>
+            <p class="text-lg text-zinc-600 max-w-2xl mx-auto">Python + Flask + PyCardano running entirely in your
+                browser via WebAssembly. No servers needed.</p>
+        </header>
+
+        <main class="space-y-12">
+            <!-- HTMX Section -->
+            <section
+                class="bg-white shadow-sm rounded-xl overflow-hidden border border-zinc-200 transition-shadow hover:shadow-md">
+                <div class="p-6">
+                    <h2 class="text-xl font-semibold text-zinc-900 mb-2">HTMX Interaction</h2>
+                    <p class="text-zinc-600 mb-4">Click the button to fetch content from the in-browser Flask app.</p>
+
+                    <button hx-get="/some_route" hx-target="#output" _="on htmx:beforeRequest set the innerHTML of #output to `
+                            <div class='flex items-center justify-center text-zinc-500'>
+                                <svg class='animate-spin h-5 w-5 mr-3' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
+                                    <circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='4'></circle>
+                                    <path class='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                                </svg>
+                                <span>Loading...</span>
+                            </div>
+                        `"
+                        class="bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-white font-medium px-4 py-2 rounded-lg transition-colors">
+                        Load Data
+                    </button>
+
+                    <div id="output"
+                        class="mt-4 p-4 border border-zinc-200 rounded-lg bg-zinc-50 min-h-[60px] text-zinc-600 transition-all duration-300">
+                        <!-- Content from Flask will be loaded here -->
+                        <span class="text-zinc-400 text-sm">Response will appear here...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PyCardano Section -->
+            <section
+                class="bg-white shadow-sm rounded-xl overflow-hidden border border-zinc-200 transition-shadow hover:shadow-md">
+                <div class="p-6">
+                    <h2 class="text-xl font-semibold text-zinc-900 mb-2">PyCardano Interaction</h2>
+                    <p class="text-zinc-600 mb-4">Generate a Cardano address using PyCardano running in your browser.
+                    </p>
+
+                    <button hx-get="/pycardano" hx-target="#pycardano-output" hx-swap="innerHTML" _="on htmx:beforeRequest set the innerHTML of #pycardano-output to `
+                            <div class='flex items-center justify-center text-zinc-500'>
+                                <svg class='animate-spin h-5 w-5 mr-3' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
+                                    <circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='4'></circle>
+                                    <path class='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                                </svg>
+                                <span>Generating...</span>
+                            </div>
+                        `
+                        on htmx:beforeSwap set event.detail.content to JSON.parse(event.detail.content).address"
+                        class="bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 text-white font-medium px-4 py-2 rounded-lg transition-colors">
+                        Generate Address
+                    </button>
+
+                    <div id="pycardano-output"
+                        class="mt-4 p-4 border border-zinc-200 rounded-lg bg-zinc-50 min-h-[60px] font-mono text-sm break-all text-zinc-600 transition-all duration-300">
+                        <!-- Cardano address will be loaded here -->
+                        <span class="text-zinc-400 text-sm">Your Cardano address will appear here...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature Highlights -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div
+                    class="bg-white p-5 rounded-lg border border-zinc-200 shadow-sm transition-all duration-200 hover:shadow hover:border-zinc-300">
+                    <div class="text-blue-500 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-zinc-900">Zero Backend</h3>
+                    <p class="mt-1 text-sm text-zinc-600">Entire Flask app runs in the browser via WebAssembly.</p>
+                </div>
+
+                <div
+                    class="bg-white p-5 rounded-lg border border-zinc-200 shadow-sm transition-all duration-200 hover:shadow hover:border-zinc-300">
+                    <div class="text-indigo-500 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-zinc-900">Blockchain Ready</h3>
+                    <p class="mt-1 text-sm text-zinc-600">Generate Cardano addresses and interact with the blockchain.
+                    </p>
+                </div>
+
+                <div
+                    class="bg-white p-5 rounded-lg border border-zinc-200 shadow-sm transition-all duration-200 hover:shadow hover:border-zinc-300">
+                    <div class="text-blue-500 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-medium text-zinc-900">Decentralized</h3>
+                    <p class="mt-1 text-sm text-zinc-600">No servers, no infrastructure, just your browser.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="mt-16 pt-8 border-t border-zinc-200 text-center text-sm text-zinc-500">
+            <p>Powered by Flask + Pyodide + HTMX + PyCardano</p>
+        </footer>
+    </div>
+
+    <script type="module">
+        import { loadPyodide } from 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.mjs';
+
+        async function main() {
+            const loadingStatus = document.getElementById('loading-status');
+            const loadingOverlay = document.getElementById('loading-overlay');
+
+            function updateStatus(message) {
+                console.log(message);
+                loadingStatus.textContent = message;
+            }
+
+            // Register Service Worker first
+            if ('serviceWorker' in navigator) {
+                try {
+                    updateStatus('Registering service worker...');
+                    const registration = await navigator.serviceWorker.register('./sw.js');
+                    console.log('Service Worker registered:', registration);
+
+                    // Ensure the service worker takes control of this page
+                    await navigator.serviceWorker.ready;
+                    if (!navigator.serviceWorker.controller) {
+                        updateStatus('Activating service worker...');
+                        console.log('Service Worker not controlling the page yet, reloading...');
+                        window.location.reload();
+                        return; // Prevent further execution until reload
+                    }
+                } catch (error) {
+                    console.error('Service Worker registration failed:', error);
+                    updateStatus('Service worker registration failed. Please refresh.');
+                }
+            }
+
+            updateStatus('Initializing Pyodide...');
+            let pyodide = await loadPyodide();
+
+            updateStatus('Loading package metadata...');
+            const requirements = await fetch('./requirements.txt').then(res => res.text());
+
+            await pyodide.loadPackage(['micropip', 'ssl']);
+            const micropip = pyodide.pyimport('micropip');
+
+            // Install only essential packages to avoid conflicts
+            updateStatus('Installing essential packages: pycardano, flask-cors...');
+            await micropip.install(['pycardano==0.14.0', 'flask-cors==6.0.0']);
+
+            updateStatus('Starting Python application...');
+            const pythonCode = await fetch('./main.py').then(res => res.text());
+
+            try {
+                await pyodide.runPythonAsync(pythonCode);
+                updateStatus('Python application started.');
+
+                // Set up message listener for Service Worker requests
+                navigator.serviceWorker.addEventListener('message', async (event) => {
+                    if (event.data.type === 'FLASK_REQUEST') {
+                        const { path, method } = event.data;
+                        console.log('Main thread: Received Flask request for', path);
+
+                        try {
+                            // Execute Flask route
+                            const pyResult = await pyodide.runPython(
+                                `from flask import Response
+with app.test_request_context('${path}', method='${method}'):
+    response = app.full_dispatch_request()
+
+response_data = response.get_data(as_text=True)
+response_status = response.status_code
+{
+    'data': response_data,
+    'status': response_status
+}`
+                            );
+
+                            // Convert PyProxy to plain JS object for structured cloning
+                            const result = pyResult.toJs({ dict_converter: Object.fromEntries });
+                            pyResult.destroy();
+
+                            // Send response back to Service Worker
+                            event.ports[0].postMessage(result);
+                        } catch (error) {
+                            console.error('Error executing Flask route:', error);
+                            event.ports[0].postMessage({
+                                error: error.message,
+                                data: 'Error processing request',
+                                status: 500
+                            });
+                        }
+                    }
+                });
+
+                updateStatus('Application is ready!');
+                console.log("Flask app ready and message listener set up");
+
+                // Hide loading overlay
+                loadingOverlay.style.display = 'none';
+
+            } catch (e) {
+                console.error("Error running python code:", e);
+                updateStatus('Failed to start Python application.');
+            }
+        }
+        main();
+    </script>
+</body>
+
+</html>
